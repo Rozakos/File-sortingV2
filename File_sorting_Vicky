@@ -1,0 +1,79 @@
+# import tkinter
+# from tkinter import filedialog
+# import os
+#
+# root = tkinter.Tk()
+# root.withdraw() #use to hide tkinter window
+#
+# def search_for_file_path ():
+#     currdir = os.getcwd()
+#     tempdir = filedialog.askdirectory(parent=root, initialdir=currdir, title='Please select a directory')
+#     if len(tempdir) > 0:
+#         print ("You chose: %s" % tempdir)
+#     return tempdir
+#
+#
+# file_path_variable = search_for_file_path()
+# print ("\nfile_path_variable = ", file_path_variable)
+
+
+from tkinter import filedialog
+from tkinter import *
+
+def browse_button():
+    # Allow user to select a directory and store it in global var
+    # called folder_path
+    global folder_path
+    filename = filedialog.askdirectory()
+    folder_path.set(filename)
+    print(filename)
+
+
+root = Tk()
+folder_path = StringVar()
+lbl1 = Label(master=root,textvariable=folder_path)
+lbl1.grid(row=0, column=1)
+button2 = Button(text="Browse", command=browse_button)
+button2.grid(row=0, column=3)
+
+mainloop()
+
+
+
+import re
+import os
+import time
+
+
+
+serial_list = os.listdir('C:\Slim Sodu')
+for serial_numbers in serial_list:
+    os.chdir('C:\Slim Sodu' + "\\" + serial_numbers)
+    try:
+        with open('C:\Slim Sodu' + "\\" + serial_numbers + '\\' + serial_numbers + '_DATA.TXT', "r") as f:
+            lines = open('C:\Slim Sodu' + "\\" + serial_numbers + '\\' + serial_numbers + '_DATA.TXT').read()
+            first_line = f.readline()
+            serial_number_regex = re.findall(r'\d\d\d\d\d\d\d\d\d\d\d\d?\d?', lines)
+            test_status = re.findall(r'TEST STATUS: FAIL', lines)
+            fail_regex = re.findall(r'FAIL', lines)
+            if not test_status and serial_number_regex:
+                pass
+            else:
+                try:
+                    export = serial_number_regex[0] + " " + test_status[0]
+                    print(export)
+                    os.chdir('C:\\Slim Sodu Fails')
+                    f = open('Slim Sodu Fails.txt', "a")
+                    f.write(str(export + '\n'))
+                    f.close()
+                except FileNotFoundError:
+                    pass
+    except NotADirectoryError:
+        print('Wrong Directory')
+        pass
+    except FileNotFoundError:
+        pass
+
+time.sleep(3)
+
+
