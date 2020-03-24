@@ -5,6 +5,7 @@ import tkinter
 from tkinter import filedialog
 from datetime import datetime
 
+result_list = []
 
 print('Select a Directory.')
 
@@ -25,8 +26,9 @@ file_path_variable = search_for_file_path()
 
 serial_list = os.listdir(str(file_path_variable))
 for serial_numbers in serial_list:
-    os.chdir(file_path_variable + "\\" + serial_numbers)
+    # os.chdir(file_path_variable + "\\" + serial_numbers)
     try:
+        os.chdir(file_path_variable + "\\" + serial_numbers)
         with open(file_path_variable + "\\" + serial_numbers + '\\' + serial_numbers + '_DATA.TXT', "r") as f:
             lines = open(file_path_variable + "\\" + serial_numbers + '\\' + serial_numbers + '_DATA.TXT').read()
             first_line = f.readline()
@@ -36,26 +38,19 @@ for serial_numbers in serial_list:
             if not test_status and serial_number_regex:
                 pass
             else:
-                try:
-                    export = serial_number_regex[0] + " " + test_status[0] + "\n"
-                    result_list = []
-                    # path = file_path_variable + file_path_variable[2:] + ' Fails'
-                    # path = file_path_variable + '/' + 'FAILS'
-                    path = file_path_variable
-                    print(path)
-                    os.chdir(path)
-                    # os.makedirs(file_path_variable + r'/FAILS')
-                    f = open('Slim Sodu Fails.txt', "a")
-                    f.write(str(export + '\n'))
-                    f.close()
-                except FileNotFoundError:
-                    print('FileNotFound')
-                except NotADirectoryError:
-                    print('Wrong Directory')
-                    pass
+                export = serial_number_regex[0] + " " + test_status[0] + "\n"
+                result_list.append(export)
     except FileNotFoundError:
         pass
+    except NotADirectoryError:
+        pass
 
+os.chdir(file_path_variable)
+f = open('Slim Sodu Fails.txt', "a")
+for result in result_list:
+    f.write(result)
+    print(result)
+f.close()
 time.sleep(3)
 
 
